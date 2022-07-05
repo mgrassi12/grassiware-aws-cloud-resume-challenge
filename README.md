@@ -26,5 +26,11 @@ Other to-do:
 * Fix mobile view logo sizing. 
 * Optimize properties defined in IAC to cost reduce in AWS.
 
+## Architecture
+![architecture diagram](architecture.jpg)
+Diagram above is from [Leszek Ucinski's blog](https://dev.to/cloudedthings/cloud-resume-challenge-aws-1mhh). 
+
 ## Thanks for visiting! :)
 If you're thinking of having a go at this challenge, [Open Up The Cloud's video series](https://www.youtube.com/channel/UCAklaE5D59xWtip-3Jwa7xA) is an immensely useful resource. 
+
+Also, I found [this](https://shishirkh.medium.com/guide-to-the-cloud-resume-challenge-part-1-s3-and-cloudfront-fce220cf8f0e) medium article useful for learning to navigate around the console.
