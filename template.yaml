@@ -19,6 +19,18 @@ Resources:
         IndexDocument: index.html
       BucketName: cloud-resume-challenge-grassiware-sam
 
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloud-resume-challenge-sam
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "ID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ID"
+          KeyType: "HASH"
+
   MyRoute53Record:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -36,6 +48,7 @@ Resources:
   #    DomainName: grassiware.app
   #    ValidationMethod: DNS
   # Commented out because I am using an existing certificate. Will convert to IAC later.
+
   MyDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
@@ -79,19 +92,40 @@ Resources:
                 - /*
       Bucket: !Ref MyWebsite
 
-  HelloWorldFunction:
+  GetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello_world/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: cloud-resume-challenge-sam
+      CodeUri: get-function/
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
         - x86_64
       Events:
-        HelloWorld:
+        Get:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
+            Path: /get
+            Method: get
+
+  PutFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: cloud-resume-challenge-sam
+      CodeUri: put-function/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        Put:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /put
             Method: get
 
 Outputs:
@@ -101,9 +135,15 @@ Outputs:
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  GetFunction:
+    Description: "GetFunction ARN"
+    Value: !GetAtt GetFunction.Arn
+  PutFunction:
+    Description: "PutFunction ARN"
+    Value: !GetAtt PutFunction.Arn
+  GetFunctionIamRole:
+    Description: "Implicit IAM Role created for GetFunction"
+    Value: !GetAtt GetFunctionRole.Arn
+  PutFunctionIamRole:
+    Description: "Implicit IAM Role created for PutFunction"
+    Value: !GetAtt PutFunctionRole.Arn

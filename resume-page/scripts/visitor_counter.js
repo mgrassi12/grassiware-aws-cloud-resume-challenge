@@ -6,7 +6,7 @@ function displayVisitorCount(data) {
   visitorsDiv.appendChild(heading);
 }   
 
-fetch("https://ctxpiilkb1.execute-api.us-east-1.amazonaws.com/dev/")
+fetch("https://cro240ve32.execute-api.us-east-1.amazonaws.com/Prod/get")
   .then((response) => {
     if (response.ok) {
       return response.json();
@@ -16,13 +16,13 @@ fetch("https://ctxpiilkb1.execute-api.us-east-1.amazonaws.com/dev/")
   })
   .then(data => {
     console.log(data);
-	displayVisitorCount(data);
+	displayVisitorCount(data['count']);
   })
   .catch((error) => console.error("GET ERROR:", error));
   
 let empty_json = {};
 
-fetch("https://ctxpiilkb1.execute-api.us-east-1.amazonaws.com/dev/", { method: "POST" })
+fetch("https://cro240ve32.execute-api.us-east-1.amazonaws.com/Prod/put")
   .then((response) => {
     if (response.ok) {
       return response.json();
@@ -33,4 +33,4 @@ fetch("https://ctxpiilkb1.execute-api.us-east-1.amazonaws.com/dev/", { method: "
   .then(data => {
     console.log(data);
   })
-  .catch((error) => console.error("POST ERROR:", error));
+  .catch((error) => console.error("PUT ERROR:", error));
